@@ -1,10 +1,13 @@
 * install levmar
+```
 git clone https://github.com/myton/levmar
 cd levmar
 mkdir build
 cmake ..
 sudo make install
+```
 * install fundest1.2
+```
 git clone https://github.com/myton/fundest-1.2.git
 cd fundest-1.2
 mkdir build
@@ -12,7 +15,7 @@ cd build
 cmake ..
 make 
 ./fundest_demo  ../test/matches.txt
-
+```
 
     **************************************************************
                                 FUNDEST
