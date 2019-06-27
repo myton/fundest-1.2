@@ -30,7 +30,7 @@ SET(HAVE_LAPACK 1 CACHE BOOL "Do we have LAPACK/BLAS?")
 # the directory where the lapack/blas/f2c libraries reside
 SET(LAPACKBLAS_DIR "/usr/lib" CACHE PATH "Path to lapack/blas libraries")
 #SET(LAPACKBLAS_DIR "C:\Program Files\Intel\MKL\10.2.2.025\ia32\lib" CACHE PATH "Path to lapack/blas libraries") # MKL
-SET(NEED_F2C 1 CACHE BOOL "Do we need either f2c or F77/I77?")
+SET(NEED_F2C 0 CACHE BOOL "Do we need either f2c or F77/I77?")
 SET(HAVE_PLASMA 0 CACHE BOOL "Do we have PLASMA parallel linear algebra library?")
 IF(HAVE_PLASMA)
  SET(PLASMA_DIR "/usr/local/PLASMA" CACHE PATH "Path to PLASMA root")

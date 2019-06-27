@@ -3,6 +3,7 @@
 git clone https://github.com/myton/levmar
 cd levmar
 mkdir build
+make
 cmake ..
 sudo make install
 ```
