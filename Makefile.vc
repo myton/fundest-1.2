@@ -1,0 +1,59 @@
+#
+# MS Visual C Makefile for fmatrix estimation
+#
+# At the command prompt, type
+# nmake /f Makefile.vc
+#
+# To build a DLL, type
+# nmake CFL=/DDLL_BUILD /f Makefile.vc dll
+#
+
+CC=cl /nologo
+# CHANGE THE FOLLOWING LINE TO WHERE YOUR LEVMAR levmar.h is!
+LEVMARHDR_PATH=C:\levmar-2.6
+# CHANGE THE FOLLOWING TWO LINES TO WHERE YOUR COMPILED LEVMAR & LAPACK LIBS ARE!
+LEVMARLIB_PATH=C:\levmar-2.6
+LAPACKLIBS_PATH=C:\src\lib
+INCLUDES=/I. /I$(LEVMARHDR_PATH)
+# /MD COMPILES WITH MULTIPLE THREADS SUPPORT. TO DISABLE IT, SUBSTITUTE WITH /ML
+CFLAGS=$(CFL) /D_CRT_SECURE_NO_WARNINGS $(INCLUDES) /MD /W3 /GX /O2 #/Wall
+LDFLAGS=/link /subsystem:console /opt:ref /libpath:. /libpath:$(LEVMARLIB_PATH) /libpath:$(LAPACKLIBS_PATH)
+AR=lib /nologo
+DLLFLAGS=/link /dll /entry:_DllMainCRTStartup@12 /subsystem:console /release /libpath:$(LEVMARLIB_PATH) /libpath:$(LAPACKLIBS_PATH)
+
+LIBOBJS=calc_fund_coeffs.obj fundest.obj lqs.obj buckets.obj norm.obj linalg.obj gric.obj misc.obj
+LIBSRCS=calc_fund_coeffs.c fundest.c lqs.c buckets.c norm.c linalg.c gric.c misc.c
+
+FUNDEST_DEMO_OBJS=fundest_demo.obj
+FUNDEST_DEMO_SRCS=fundest_demo.c
+
+LIBS=levmar.lib clapack.lib blas.lib libF77.lib libI77.lib
+
+all: fundest.lib fundest_demo.exe
+
+fundest.lib: $(LIBOBJS)
+	$(AR) /out:fundest.lib $(LIBOBJS)
+
+calc_fund_coeffs.obj: calc_fund_coeffs.h
+fundest.obj: util.h fundest.h calc_fund_coeffs.h lqs.h
+lqs.obj: lqs.h compiler.h
+linalg.obj: compiler.h util.h
+norm.obj: compiler.h util.h
+buckets.obj: util.h lqs.h
+
+fundest_demo.exe: $(FUNDEST_DEMO_OBJS) fundest.lib
+	$(CC) $(FUNDEST_DEMO_OBJS) $(LDFLAGS) /out:fundest_demo.exe fundest.lib $(LIBS)
+
+fundest_demo.obj: fundest.h
+
+# Note that when building a DLL, we make sure that we do not use any object
+# files from a previous compilation or leave such files after we are done!
+#dll: clean $(LIBOBJS)
+#	$(CC) $(LIBOBJS) $(DLLFLAGS) /out:libfundest.dll /implib:libfundest.lib $(LIBS)
+#	-del $(LIBOBJS)
+
+clean:
+	-del $(LIBOBJS) $(FUNDEST_DEMO_OBJS)
+
+cleanall: clean
+	-del fundest.lib
